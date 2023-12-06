@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
-            mkdir ~/projet-web
+            mkdir -p ~/projet-web
       - name: Copy docker compose to remote server
         uses: appleboy/scp-action@v0.1.4
         with:
