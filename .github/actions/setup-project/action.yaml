@@ -1,0 +1,12 @@
+name: Setup project
+description: Group of actions used to setup react project
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Download project dependencies
+      shell: bash
+      run: |
+        npm ci
