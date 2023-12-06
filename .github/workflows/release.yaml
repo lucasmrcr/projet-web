@@ -33,7 +33,7 @@ jobs:
           image_name: ghcr.io/lucasmrcr/projet-web
   build_and_deploy:
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [test]
     steps:
       - uses: actions/checkout@v4
       - name: Setup project
