@@ -24,7 +24,7 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v4
-      - name: Build and publish
+      - name: Build and publish docker image
         uses: ./.github/actions/build-and-publish
         with:
           ghcr_user: ${{secrets.GHCR_USER}}
@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.KEY }}
           script: |
             mkdir -p ~/projet-web
-      - name: Copy docker compose to remote server
+      - name: Copy build archived file
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.HOST }}
