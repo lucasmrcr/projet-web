@@ -1,0 +1,31 @@
+name: Setup project
+description: Group of actions used to setup react project
+inputs:
+  ghcr_user:
+    description: Username
+    required: true
+  ghcr_password:
+    description: Password
+    required: true
+  version:
+    description: Version
+    required: true
+  image_name:
+    description: Image name
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{inputs.ghcr_user}}
+        password: ${{inputs.ghcr_password}}
+    - name: Build and push
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        tags: |
+          ${{inputs.image_name}}:${{inputs.version}}
+          ${{inputs.image_name}}:latest
