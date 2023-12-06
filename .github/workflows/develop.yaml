@@ -1,0 +1,21 @@
+name: Develop CI
+run-name: Develop CI
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+# cancel workflow when there is already one launched
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup project
+        uses: ./.github/actions/setup-project
+      - name: Test project
+        uses: ./.github/actions/test-project
