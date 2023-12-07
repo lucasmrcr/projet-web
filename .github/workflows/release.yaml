@@ -19,23 +19,50 @@ jobs:
         uses: ./.github/actions/setup-project
       - name: Test project
         uses: ./.github/actions/test-project
-  build:
+  build_docker:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and publish docker image
+        uses: ./.github/actions/build-and-publish
+        with:
+          ghcr_user: ${{secrets.GHCR_USER}}
+          ghcr_password: ${{secrets.GHCR_TOKEN}}
+          version: ${{  github.ref_name }}
+          image_name: ghcr.io/lucasmrcr/projet-web
+      - name: Copy docker compose to remote server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: docker-compose.yaml
+          target: ~/web
+  build_and_deploy:
     runs-on: ubuntu-latest
     needs: [test]
     steps:
       - uses: actions/checkout@v4
       - name: Setup project
         uses: ./.github/actions/setup-project
-      - name: Login to GHCR
-        uses: docker/login-action@v3
+      - name: Build
+        run: |
+          npm run build
+          tar -czvf web-${{ github.ref_name }}.tar.gz build
+      - name: Setup remote server
+        uses: appleboy/ssh-action@v1.0.0
         with:
-          registry: ghcr.io
-          username: ${{secrets.GCRH_USER}}
-          password: ${{secrets.GCRH_TOKEN}}
-      - name: Build and push
-        uses: docker/build-push-action@v5
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            mkdir -p ~/web
+      - name: Copy build archived file
+        uses: appleboy/scp-action@v0.1.4
         with:
-          push: true
-          tags: |
-            ghcr.io/lucasmrcr/projet-web:${{  github.ref_name }}
-            ghcr.io/lucasmrcr/projet-web:latest
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          source: web-${{ github.ref_name }}.tar.gz
+          target: ~/web

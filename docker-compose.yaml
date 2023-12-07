@@ -1,0 +1,5 @@
+services:
+  web:
+    image: ghcr.io/lucasmrcr/projet-web:latest
+    ports:
+      - "5678:80"
