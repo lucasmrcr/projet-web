@@ -29,4 +29,14 @@ L'image docker est push sur le github container registry à chaque release. Pour
 - Envoie la dernière version du docker-compose sur le serveur distant
 - Build le projet en version static
 - Compress le build en tar.gz
-- Envoie le tar.gz sur le serveur distant
+- Envoie le tar.gz sur le serveur distant dans le dossier `/home/lucas/web/web-{version}.tar.gz`
+
+# Lancement de l'application sans docker
+## Prérequis
+- Serveur web
+
+## Installation
+- Déplacer le fichier compressé sur le serveur web
+- Décompresser le fichier
+- Configurer le serveur web pour pointer sur le dossier décompressé
+- Lancer le serveur web
