@@ -19,3 +19,5 @@ jobs:
         uses: ./.github/actions/setup-project
       - name: Test project
         uses: ./.github/actions/test-project
+      - name: Build project
+        run: npm run build
